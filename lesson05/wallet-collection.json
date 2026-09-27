@@ -1,0 +1,47 @@
+{
+  "v": 2,
+  "name": "Кошелёк",
+  "folders": [
+    {
+      "v": 2,
+      "name": "Позитивные",
+      "folders": [],
+      "requests": [],
+      "auth": { "authType": "inherit", "authActive": true },
+      "headers": []
+    },
+    {
+      "v": 2,
+      "name": "Негативные",
+      "folders": [],
+      "requests": [],
+      "auth": { "authType": "inherit", "authActive": true },
+      "headers": []
+    }
+  ],
+  "requests": [
+    {
+      "v": "7",
+      "name": "Баланс своего кошелька",
+      "method": "GET",
+      "endpoint": "{{base_url}}/api/wallet/balance",
+      "params": [],
+      "headers": [
+        {
+          "key": "Authorization",
+          "value": "Bearer {{token}}",
+          "active": true,
+          "description": "Токен подставляется из окружения, в запросе его нет"
+        }
+      ],
+      "auth": { "authType": "inherit", "authActive": true },
+      "body": { "contentType": null, "body": null },
+      "preRequestScript": "",
+      "testScript": "",
+      "requestVariables": [],
+      "responses": {}
+    }
+  ],
+  "auth": { "authType": "inherit", "authActive": true },
+  "headers": []
+}

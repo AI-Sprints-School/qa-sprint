@@ -1,0 +1,34 @@
+name: tests
+
+# Прогон запускается сам на каждый коммит в любую ветку и на каждый
+# pull request. Результат виден во вкладке Actions форка и во вкладке
+# Checks вашего pull request.
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    name: pytest lesson08
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Забрать репозиторий
+        uses: actions/checkout@v7
+
+      - name: Python 3.14
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Установка окружения
+        run: |
+          python --version
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      # Раскройте этот шаг, чтобы прочитать вывод pytest: имя упавшего
+      # теста, строку с assert, факт слева и ожидание справа.
+      - name: Тесты урока 8
+        working-directory: lesson08
+        run: python -m pytest -v

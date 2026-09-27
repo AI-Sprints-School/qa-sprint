@@ -1,0 +1,20 @@
+# Служебное от Python и pytest
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Результаты мутационного прогона: их считает GitHub на своей машине
+mutants/
+.mutmut-cache
+
+# Локальное окружение и секреты
+.env
+.env.*
+venv/
+.venv/
+
+# Мусор операционных систем и редакторов
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

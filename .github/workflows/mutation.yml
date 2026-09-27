@@ -1,0 +1,66 @@
+name: mutation
+
+# Мутационный прогон урока 9. Запускается сам на каждый коммит в ветку
+# lesson09; кнопкой Run workflow его можно запустить и вручную.
+on:
+  push:
+    branches:
+      - lesson09
+  workflow_dispatch:
+
+jobs:
+  mutation:
+    name: mutmut lesson08/wallet_utils.py
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Забрать репозиторий
+        uses: actions/checkout@v7
+
+      - name: Python 3.14
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Установка окружения
+        run: |
+          python --version
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      # mutmut завершается ненулевым кодом в вырожденных случаях
+      # (например, когда тестов урока 8 в ветке ещё нет). Прогон на этом
+      # не останавливается: цифру и список надо напечатать всё равно.
+      - name: Мутационный прогон
+        working-directory: lesson08
+        continue-on-error: true
+        run: python -m mutmut run
+
+      # Здесь лежит всё, что не убито, в формате «имя мутанта: статус».
+      # Усиливать тест имеет смысл только против строки со статусом survived.
+      - name: Выжившие мутанты
+        if: always()
+        working-directory: lesson08
+        run: python -m mutmut results
+
+      - name: Mutation score
+        if: always()
+        working-directory: lesson08
+        run: |
+          python -m mutmut export-cicd-stats
+          python - <<'PY'
+          import json
+          import pathlib
+
+          stats_file = pathlib.Path("mutants/mutmut-cicd-stats.json")
+          if not stats_file.exists():
+              print("mutation score: посчитать не удалось — mutmut не оставил статистику")
+              raise SystemExit(0)
+
+          stats = json.loads(stats_file.read_text(encoding="utf-8"))
+          killed = int(stats.get("killed", 0))
+          total = int(stats.get("total", 0))
+          percent = round(killed * 100 / total) if total else 0
+
+          print(f"mutation score: killed {killed} of {total} ({percent}%)")
+          PY

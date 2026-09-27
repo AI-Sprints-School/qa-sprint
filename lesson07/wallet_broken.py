@@ -1,0 +1,30 @@
+"""Заведомо сломанная копия кошелька для бонусного прогона урока 7.
+
+К коду применены три поломки из lesson07/breakages.md: П1, П2 и П3.
+Файл нужен только workflow `.github/workflows/review-tests.yml`, который
+подставляет его вместо рабочего модуля и прогоняет по нему шесть тестов
+из lesson07/tests_to_review.py. В обычной работе он не используется.
+"""
+from wallet_utils import MAX_AMOUNT, FEE_PERCENT, MIN_FEE
+
+
+def calculate_fee(amount):
+    # П3: комиссия всегда ноль
+    return 0
+
+
+class Wallet:
+    def __init__(self, balance):
+        self.balance = balance
+        self._last_operation = None
+
+    def deposit(self, amount):
+        # П1: пополнение прибавляет на 10 меньше, чем просили
+        self.balance = self.balance + amount - 10
+        self._last_operation = f"deposit:{amount}"
+
+    def withdraw(self, amount):
+        # П2: списание разрешает уйти в минус и списывает всегда
+        self.balance = self.balance - amount
+        self._last_operation = f"withdraw:{amount}"
+        return True
