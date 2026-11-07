@@ -5,6 +5,8 @@ import requests
 @pytest.mark.xfail(
     reason="заложенный дефект списания больше баланса, lesson05/bug-reports.md: заголовок вашего баг-репорта",
     strict=True,
+    # raises: упавшая по другой причине (опечатка, KeyError, сеть) проверка станет красной, а не «xfailed»
+    raises=AssertionError,
 )
 def test_withdraw_over_balance_is_rejected(base_url, auth_headers):
     url = base_url + "/api/wallet/withdraw"
@@ -23,6 +25,4 @@ def test_withdraw_over_balance_is_rejected(base_url, auth_headers):
             headers=auth_headers,
             timeout=10,
         )
-    body = response.json()
-
-    # ваши две строки: код ответа и код ошибки в теле
+    # ваши строки: код ответа, затем body = response.json() и код ошибки в теле

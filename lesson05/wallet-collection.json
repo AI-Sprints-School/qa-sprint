@@ -24,12 +24,12 @@
       "v": "7",
       "name": "Баланс своего кошелька",
       "method": "GET",
-      "endpoint": "{{base_url}}/api/wallet/balance",
+      "endpoint": "<<base_url>>/api/wallet/balance",
       "params": [],
       "headers": [
         {
           "key": "Authorization",
-          "value": "Bearer {{token}}",
+          "value": "Bearer <<token>>",
           "active": true,
           "description": "Токен подставляется из окружения, в запросе его нет"
         }

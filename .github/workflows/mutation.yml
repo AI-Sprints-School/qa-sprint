@@ -1,6 +1,6 @@
 name: mutation
 
-# Мутационный прогон урока 9. Запускается сам на каждый коммит в ветку
+# Мутационный прогон задания 4.4. Запускается сам на каждый коммит в ветку
 # lesson09; кнопкой Run workflow его можно запустить и вручную.
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
           python -m pip install -r requirements.txt
 
       # mutmut завершается ненулевым кодом в вырожденных случаях
-      # (например, когда тестов урока 8 в ветке ещё нет). Прогон на этом
+      # (например, когда тестов задания 4.2 в ветке ещё нет). Прогон на этом
       # не останавливается: цифру и список надо напечатать всё равно.
       - name: Мутационный прогон
         working-directory: lesson08
@@ -42,6 +42,19 @@ jobs:
         if: always()
         working-directory: lesson08
         run: python -m mutmut results
+
+      # Для каждого выжившего мутанта печатает, что именно он заменил в коде
+      # (mutmut show <имя>, например wallet_utils.x_calculate_fee__mutmut_3).
+      # Подсчёт mutation score ниже от этого шага не зависит.
+      - name: Что заменил каждый выживший мутант
+        if: always()
+        working-directory: lesson08
+        run: |
+          python -m mutmut results | grep ': survived' | sed 's/^ *//; s/: survived$//' | while read -r name; do
+            echo "=================== $name"
+            python -m mutmut show "$name" || true
+          done
+          true
 
       - name: Mutation score
         if: always()
@@ -65,7 +78,7 @@ jobs:
           print(f"mutation score: killed {killed} of {total} ({percent}%)")
           PY
 
-      # API-тесты урока 9 ходят в живой «Кошелёк». Доступы — из секретов форка
+      # API-тесты задания 4.4 ходят в живой «Кошелёк». Доступы — из секретов форка
       # (Settings → Secrets and variables → Actions). Секретов нет — conftest.py
       # пропускает тесты (SKIPPED), прогон не падает.
       - name: API-тесты урока 9
