@@ -1,7 +1,8 @@
 name: mutation
 
 # Мутационный прогон задания 4.4. Запускается сам на каждый коммит в ветку
-# lesson09; кнопкой Run workflow его можно запустить и вручную.
+# lesson09. Цифру «до» берут кнопкой: вкладка Actions → workflow mutation →
+# Run workflow → Branch: main.
 on:
   push:
     branches:
@@ -77,14 +78,3 @@ jobs:
 
           print(f"mutation score: killed {killed} of {total} ({percent}%)")
           PY
-
-      # API-тесты задания 4.4 ходят в живой «Кошелёк». Доступы — из секретов форка
-      # (Settings → Secrets and variables → Actions). Секретов нет — conftest.py
-      # пропускает тесты (SKIPPED), прогон не падает.
-      - name: API-тесты урока 9
-        if: always()
-        env:
-          WALLET_BASE_URL: ${{ secrets.WALLET_BASE_URL }}
-          WALLET_LOGIN: ${{ secrets.WALLET_LOGIN }}
-          WALLET_PASSWORD: ${{ secrets.WALLET_PASSWORD }}
-        run: python -m pytest lesson09 -v -rsx
